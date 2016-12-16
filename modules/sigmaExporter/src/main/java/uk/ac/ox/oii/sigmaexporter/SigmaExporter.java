@@ -208,8 +208,14 @@ public class SigmaExporter implements Exporter, LongTask {
                             if (valObj == null) {
                                 continue;
                             }
-                            String val = valObj.toString();
-                            jEdge.putAttribute(name, val);
+                            
+                            // Enable override of default edgetype selected in export preferences
+                            if("edgetype".equalsIgnoreCase(col.getId()) && !valObj.toString().trim().isEmpty()) {
+                                jEdge.setType(valObj.toString());
+                            } else {
+                                String val = valObj.toString();
+                                jEdge.putAttribute(name, val);
+                            }
                         }
 
                         String color;

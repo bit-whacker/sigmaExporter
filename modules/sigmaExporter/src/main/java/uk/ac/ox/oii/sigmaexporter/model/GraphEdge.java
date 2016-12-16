@@ -10,6 +10,7 @@ public class GraphEdge extends GraphElement{
 	private String source;
 	private String target;
         private String id;
+        private String type;
 	
 	public GraphEdge(String id) {
 		super();
@@ -17,6 +18,7 @@ public class GraphEdge extends GraphElement{
 		label="";
 		source="";
 		target="";
+                type="";
 	}
 
 	public String getLabel() {
@@ -43,4 +45,15 @@ public class GraphEdge extends GraphElement{
 		this.target = target;
 	}
 
+        public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+            
+                String edgeType = type.toLowerCase().trim().replaceAll("\\s+","");
+                edgeType = (edgeType.equalsIgnoreCase("curvedarrow")) ? "curvedArrow": edgeType;
+		
+                this.type = edgeType;
+	}
 }
