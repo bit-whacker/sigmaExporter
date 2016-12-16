@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 import org.gephi.graph.api.Column;
 import org.gephi.graph.api.Edge;
 import org.gephi.graph.api.Graph;
@@ -38,6 +39,10 @@ import org.gephi.project.api.Workspace;
 import org.gephi.utils.longtask.spi.LongTask;
 import org.gephi.utils.progress.Progress;
 import org.gephi.utils.progress.ProgressTicket;
+import org.gephi.visualization.VizController;
+import org.gephi.visualization.VizModel;
+import org.gephi.visualization.apiimpl.VizConfig;
+import org.openide.util.NbPreferences;
 import uk.ac.ox.oii.sigmaexporter.model.ConfigFile;
 import uk.ac.ox.oii.sigmaexporter.model.GraphEdge;
 import uk.ac.ox.oii.sigmaexporter.model.GraphElement;
@@ -118,6 +123,14 @@ public class SigmaExporter implements Exporter, LongTask {
                     GraphModel graphModel = workspace.getLookup().lookup(GraphModel.class);
                     graph = graphModel.getGraphVisible();
                     graph.readLock();
+                    
+                    Preferences prefs = NbPreferences.forModule(SigmaSettingsPanel.class);
+                    VizModel vizModel = VizController.getInstance().getVizModel();
+                    VizConfig vizConfig = vizModel.getConfig();
+
+                    Color backgroundColor = vizConfig.getDefaultBackgroundColor();
+                    Color edgeUniColor = vizConfig.getDefaultEdgeUniColor();
+                    String colorMode = prefs.get("edges.colorMode", "Use source node color");
 
                     //Count the number of tasks (nodes + edges) and start the progress
                     int tasks = graph.getNodeCount() + graph.getEdgeCount();
@@ -218,19 +231,24 @@ public class SigmaExporter implements Exporter, LongTask {
                             }
                         }
 
-                        String color;
-                        if (e.alpha()!=0) {
-                            color = "rgb(" + (int) (r* 255) + "," + (int) (g* 255) + "," + (int) (b* 255) + ")";
-                        } else {
-                            //no colour has been set. Colour will be mix of connected nodes
-                            Node n = e.getSource();
-                            Color source = new Color(n.r(),n.g(),n.b());
-                            n = e.getTarget();
-                            Color target = new Color(n.r(),n.g(),n.b());
-                            Color result = colorMixer.getColor(null, source, target);
-                            color = "rgb(" + result.getRed() + "," + result.getGreen() + "," + result.getBlue() + ")";
-                        }
-                        jEdge.setColor(color);
+                        // Leave blank to let sigma use it's default coloring techniques (by default use source node color)
+                        if (!colorMode.equalsIgnoreCase("Use source node color"))  {
+                            String color;
+                            if (colorMode.equalsIgnoreCase("Use graph default color"))  {
+                                color = "rgb(" + edgeUniColor.getRed() + "," + edgeUniColor.getGreen() + "," + edgeUniColor.getBlue() + ")";
+                            } else if (colorMode.equalsIgnoreCase("Use edge color specified in table column"))  {
+                                color = "rgb(" + (int) (r* 255) + "," + (int) (g* 255) + "," + (int) (b* 255) + ")";
+                            } else {
+                                //no colour has been set. Colour will be mix of connected nodes
+                                Node n = e.getSource();
+                                Color source = new Color(n.r(),n.g(),n.b());
+                                n = e.getTarget();
+                                Color target = new Color(n.r(),n.g(),n.b());
+                                Color result = colorMixer.getColor(null, source, target);
+                                color = "rgb(" + result.getRed() + "," + result.getGreen() + "," + result.getBlue() + ")";
+                            }
+                            jEdge.setColor(color);
+                        } 
 
                         jEdges.add(jEdge);
 
