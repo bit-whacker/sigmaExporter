@@ -130,7 +130,7 @@ public class SigmaExporter implements Exporter, LongTask {
                         String id = n.getId().toString();
                         String label = n.getLabel();
                         float x = n.x();
-                        float y = n.y();
+                        float y = n.y()*-1;
                         float size = n.size();
                         String color = "rgb(" + (int) (n.r() * 255) + "," + (int) (n.g() * 255) + "," + (int) (n.b() * 255) + ")";
 
