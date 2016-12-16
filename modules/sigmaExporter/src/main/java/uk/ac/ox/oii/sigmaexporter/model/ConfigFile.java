@@ -25,7 +25,7 @@ public class ConfigFile implements Serializable{
     public ConfigFile() {
         this.type = "network";
         this.data = "data.json";
-        this.version = "1.0";
+        this.version = "2.0";
         this.logo = new HashMap<String,Object>();
         this.text = new HashMap<String,Object>();
         this.legend = new HashMap<String,Object>();
@@ -62,32 +62,23 @@ public class ConfigFile implements Serializable{
         //sigma.put("graphProperties", new HashMap<String,String>());
         //sigma.put("mouseProperties", new HashMap<String,String>());
         HashMap<String,Object> map = new HashMap<String,Object>();
-        map.put("defaultLabelColor", "#000");
-        map.put("defaultLabelSize", 14);
-        map.put("defaultLabelBGColor", "#ddd");
-        map.put("defaultHoverLabelBGColor", "#002147");
-        map.put("defaultLabelHoverColor", "#fff");
-        map.put("labelThreshold", 10);
-        map.put("defaultEdgeType", "curve");
-        map.put("hoverFontStyle", "bold");
-        map.put("fontStyle", "bold");
-        map.put("activeFontStyle", "bold");
-        sigma.put("drawingProperties", map);
-        
-        map = new HashMap<String,Object>();
+        map.put("drawEdgeLabels", "true");
+        map.put("drawLabels", "true");
+        map.put("drawEdges", "true");
+        map.put("drawNodes", "true");
+        map.put("defaultEdgeType", "line");
+        map.put("minArrowSize", 10.0);
+        map.put("zoomingRatio", 1.1);
+        map.put("doubleClickZoomingRatio", 1.7);
+        map.put("labelThreshold", 6);
+        map.put("sideMargin", 100);
         map.put("minRatio", 0.75);
         map.put("maxRatio", 20);
-        sigma.put("mouseProperties", map);
-
-        map = new HashMap<String,Object>();
         map.put("minNodeSize", 1);
-        map.put("maxNodeSize", 7);
+        map.put("maxNodeSize", 15);
         map.put("minEdgeSize", 0.2);
-        map.put("maxEdgeSize", 0.5);
-        sigma.put("graphProperties", map);
-        
-        
-        
+        map.put("maxEdgeSize", 1);
+        sigma.put("settings", map);
     }
     
     
@@ -168,6 +159,28 @@ public class ConfigFile implements Serializable{
         logo.put("file",props.get("logo.file",""));
         logo.put("link",props.get("logo.link",""));
         logo.put("text",props.get("logo.author",""));
+        
+        // TODO - clean this up 
+        HashMap<String,Object> map = new HashMap<String,Object>();
+        map.put("drawEdgeLabels", Boolean.valueOf(props.get("edges.showLabel","true")));
+        map.put("drawLabels", Boolean.valueOf(props.get("nodes.showLabel","true")));
+        map.put("drawEdges", Boolean.valueOf(props.get("edges.show","true")));
+        map.put("drawNodes", Boolean.valueOf(props.get("nodes.show","true")));
+        String edgeType = props.get("edges.type","line").toLowerCase().trim().replaceAll("\\s+","");
+        edgeType = (edgeType.equalsIgnoreCase("curvedarrow")) ? "curvedArrow": edgeType;
+        map.put("defaultEdgeType", edgeType);
+        map.put("minArrowSize", 10.0);
+        map.put("zoomingRatio", 1.1);
+        map.put("doubleClickZoomingRatio", 1.7);
+        map.put("labelThreshold", 6);
+        map.put("sideMargin", 100);
+        map.put("minRatio", 0.75);
+        map.put("maxRatio", 20);
+        map.put("minNodeSize", 1);
+        map.put("maxNodeSize", 15);
+        map.put("minEdgeSize", 0.2);
+        map.put("maxEdgeSize", 1);
+        sigma.put("settings", map);
     }
     
     
