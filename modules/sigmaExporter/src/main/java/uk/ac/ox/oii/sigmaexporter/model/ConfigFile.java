@@ -188,7 +188,7 @@ public class ConfigFile implements Serializable{
         map.put("minEdgeSize", 0.2);
         map.put("maxEdgeSize", 1);
         map.put("minArrowSize", 10.0);
-        map.put("enableEdgeHovering", "false");
+        map.put("enableEdgeHovering", Boolean.valueOf(props.get("edge.hovering", "false")));
         
         sigma.put("settings", map);
     }
