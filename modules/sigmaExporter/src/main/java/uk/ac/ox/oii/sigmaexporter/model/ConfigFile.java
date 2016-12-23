@@ -54,6 +54,7 @@ public class ConfigFile implements Serializable{
         features.put("search","true");
         features.put("hoverBehavior","default");
         features.put("groupSelectorAttribute",false);
+        features.put("dimColor","#aaa");
         
         informationPanel.put("groupByEdgeDirection",false);
         informationPanel.put("imageAttribute",false);
