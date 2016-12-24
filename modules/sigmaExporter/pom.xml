@@ -9,7 +9,7 @@
 
     <groupId>uk.ac.ox.oii</groupId>
     <artifactId>sigmaexporter</artifactId>
-    <version>0.4</version>
+    <version>0.6</version>
     <packaging>nbm</packaging>
 
     <name>sigmaExporter</name>
